@@ -1,0 +1,45 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.graphstudio.calculator'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.graphstudio.calculator"
+        minSdk 24
+        targetSdk 34
+        // versionCode grows automatically with every GitHub build, so a new APK can always be installed over the old one
+        versionCode 1000 + (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInteger()
+        versionName "3.3"
+    }
+
+    // Own signing key (not the shared "Android Debug" key that antivirus apps distrust)
+    signingConfigs {
+        release {
+            storeFile file('graphstudio-release.keystore')
+            storePassword 'GraphStudio-2026'
+            keyAlias 'graphstudio'
+            keyPassword 'GraphStudio-2026'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
